@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chrome में ही खुलेगा</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .chrome-badge {
+            background: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .link-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #4285f4;
+            word-break: break-all;
+        }
+        
+        .url {
+            color: #1a73e8;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .open-btn {
+            background: linear-gradient(135deg, #34a853, #4285f4);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 20px 0;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .open-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .error-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .browser-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .browser-icon {
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .chrome {
+            background: #e8f0fe;
+            color: #1a73e8;
+            border: 2px solid #1a73e8;
+        }
+        
+        .other {
+            background: #fce8e6;
+            color: #d93025;
+            border: 2px solid #d93025;
+        }
+    </style>
+</head>
+<body>
+    <!-- Chrome Users -->
+    <div id="chrome-view" class="container hidden">
+        <h1>✅ Chrome में स्वागत है</h1>
+        <div class="chrome-badge">Google Chrome Detected</div>
+        
+        <div class="link-box">
+            <p>यह लिंक खोला जाएगा:</p>
+            <p class="url" id="targetUrl">https://example.com</p>
+        </div>
+        
+        <button class="open-btn" onclick="openInChrome()">
+            🔗 लिंक खोलें
+        </button>
+        
+        <p id="countdown">5 सेकंड में ऑटोमैटिक खुलेगा...</p>
+        
+        <div class="warning">
+            <strong>नोट:</strong> यह लिंक केवल Chrome में ही काम करेगा
+        </div>
+        
+        <div class="browser-icons">
+            <div class="browser-icon chrome">✅ Chrome</div>
+            <div class="browser-icon other">❌ Firefox</div>
+            <div class="browser-icon other">❌ Safari</div>
+            <div class="browser-icon other">❌ Edge</div>
+        </div>
+    </div>
+    
+    <!-- Non-Chrome Users -->
+    <div id="non-chrome-view" class="container hidden">
+        <h1>🚫 एक्सेस डिनाइड</h1>
+        <div class="error-box">
+            <h2>यह लिंक केवल Google Chrome में खुलेगा</h2>
+            <p id="browser-name">आपका ब्राउज़र: डिटेक्ट किया जा रहा है...</p>
+            <p><strong>कृपया Google Chrome इंस्टॉल करें</strong></p>
+        </div>
+        
+        <div class="link-box">
+            <p>लिंक URL:</p>
+            <p class="url">https://example.com</p>
+            <p><small>(केवल Chrome में accessible)</small></p>
+        </div>
+        
+        <a href="https://www.google.com/chrome/" target="_blank" style="
+            background: #4285f4;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 15px 0;
+            font-weight: bold;
+        ">
+            ⬇️ Chrome डाउनलोड करें
+        </a>
+        
+        <div class="browser-icons">
+            <div class="browser-icon chrome">✅ Chrome</div>
+            <div class="browser-icon other">❌ Firefox</div>
+            <div class="browser-icon other">❌ Safari</div>
+            <div class="browser-icon other">❌ Edge</div>
+        </div>
+    </div>
+
+    <script>
+        // यहाँ अपना लिंक डालें
+        const LINK_URL = "https://www.example.com"; // अपना URL यहाँ डालें
+        
+        // DOM Elements
+        const chromeView = document.getElementById('chrome-view');
+        const nonChromeView = document.getElementById('non-chrome-view');
+        const targetUrlElement = document.getElementById('targetUrl');
+        const countdownElement = document.getElementById('countdown');
+        const browserNameElement = document.getElementById('browser-name');
+        
+        // Browser Detection
+        function isChromeBrowser() {
+            const userAgent = navigator.userAgent;
+            
+            // Chrome check (exclude Edge and Opera)
+            if (userAgent.indexOf("Chrome") > -1 && 
+                userAgent.indexOf("Edg") === -1 &&
+                userAgent.indexOf("OPR") === -1 &&
+                userAgent.indexOf("Opera") === -1) {
+                return true;
+            }
+            return false;
+        }
+        
+        // Get Browser Name
+        function getBrowserName() {
+            const ua = navigator.userAgent;
+            
+            if (ua.indexOf("Chrome") > -1 && ua.indexOf("Edg") === -1) return "Google Chrome";
+            if (ua.indexOf("Firefox") > -1) return "Mozilla Firefox";
+            if (ua.indexOf("Safari") > -1 && ua.indexOf("Chrome") === -1) return "Apple Safari";
+            if (ua.indexOf("Edg") > -1) return "Microsoft Edge";
+            if (ua.indexOf("Opera") > -1 || ua.indexOf("OPR") > -1) return "Opera";
+            
+            return "अज्ञात ब्राउज़र";
+        }
+        
+        // Open Link in Chrome
+        function openInChrome() {
+            if (isChromeBrowser()) {
+                // Chrome-specific redirect
+                window.location.href = LINK_URL;
+            } else {
+                alert("कृपया Google Chrome का उपयोग करें");
+            }
+        }
+        
+        // Auto Redirect Countdown
+        function startAutoRedirect() {
+            if (!isChromeBrowser()) return;
+            
+            let seconds = 5;
+            countdownElement.innerHTML = `<strong>${seconds}</strong> सेकंड में ऑटोमैटिक खुलेगा...`;
+            
+            const timer = setInterval(() => {
+                seconds--;
+                countdownElement.innerHTML = `<strong>${seconds}</strong> सेकंड में ऑटोमैटिक खुलेगा...`;
+                
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    openInChrome();
+                }
+            }, 1000);
+        }
+        
+        // Initialize
+        window.onload = function() {
+            // Set the target URL
+            targetUrlElement.textContent = LINK_URL;
+            
+            if (isChromeBrowser()) {
+                // Show Chrome view
+                chromeView.classList.remove('hidden');
+                
+                // Start auto redirect countdown
+                startAutoRedirect();
+                
+                // Chrome-specific features
+                if (window.chrome) {
+                    console.log("Chrome environment active");
+                    
+                    // Try to use Chrome APIs
+                    try {
+                        // Check for Chrome extensions API
+                        if (chrome.runtime) {
+                            console.log("Chrome extension API available");
+                        }
+                    } catch(e) {
+                        console.log("Standard Chrome browser");
+                    }
+                }
+            } else {
+                // Show non-Chrome view
+                nonChromeView.classList.remove('hidden');
+                
+                // Display browser name
+                const browserName = getBrowserName();
+                browserNameElement.textContent = `आपका ब्राउज़र: ${browserName}`;
+                
+                // Block any redirect attempts
+                window.addEventListener('beforeunload', function(e) {
+                    e.preventDefault();
+                    return "यह लिंक केवल Chrome में खुलेगा";
+                });
+                
+                // Disable right-click
+                document.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    alert("यह फंक्शन केवल Chrome में उपलब्ध है");
+                    return false;
+                });
+            }
+        };
+        
+        // Extra protection for non-Chrome
+        if (!isChromeBrowser()) {
+            // Block keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Block F5, Ctrl+R, Ctrl+Shift+R
+                if (e.key === 'F5' || 
+                   (e.ctrlKey && e.key === 'r') || 
+                   (e.ctrlKey && e.shiftKey && e.key === 'R')) {
+                    e.preventDefault();
+                    alert("कृपया Chrome का उपयोग करें");
+                }
+                
+                // Block Ctrl+U (view source)
+                if (e.ctrlKey && e.key === 'u') {
+                    e.preventDefault();
+                    alert("यह पेज केवल Chrome में देखा जा सकता है");
+                }
+            });
+            
+            // Prevent viewing source code
+            document.onkeydown = function(e) {
+                if (e.ctrlKey && (e.key === 'S' || e.key === 's')) {
+                    e.preventDefault();
+                    alert("सेव करने की अनुमति नहीं है");
+                    return false;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
